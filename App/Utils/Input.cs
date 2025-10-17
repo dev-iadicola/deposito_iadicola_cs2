@@ -5,7 +5,9 @@ public static class Input
     {
         while (true)
         {
-            Console.Write($"{message}: ");
+            Console.WriteLine($"{message}: ");
+            Console.Write($"> ");
+            
             string? input = Console.ReadLine();
 
             try
