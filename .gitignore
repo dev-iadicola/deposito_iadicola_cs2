@@ -1316,7 +1316,7 @@ FodyWeavers.xsd
 *.i*86
 *.x86_64
 *.hex
-
+deposito_iadicola_cs2.sln
 # Debug files
 *.dSYM/
 *.su
