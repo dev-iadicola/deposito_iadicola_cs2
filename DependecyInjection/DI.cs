@@ -135,8 +135,7 @@ public class Program
 
         int choose = Input.Read<int>("Choose your payment method (1 = Stripe, 2 = PayPal)");
 
-        IPaymentGetway? ipg = null; // ✅ inizializzata a null per sicurezza
-
+        IPaymentGetway? ipg = null; 
         switch (choose)
         {
             case 1:
@@ -152,7 +151,6 @@ public class Program
                 break;
         }
 
-        // ✅ Controllo null prima di usare ipg
         if (ipg != null)
         {
             PaymentProcessor pp = new PaymentProcessor(ipg);
