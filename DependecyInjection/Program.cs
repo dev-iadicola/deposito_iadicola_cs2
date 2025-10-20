@@ -63,10 +63,7 @@ public class GreetingService
 #endregion
 
 #region Interfaccia Payment 
-public interface IPaymentGetway
-{
-    public 
-}
+
 #endregion
 
 public class Program
