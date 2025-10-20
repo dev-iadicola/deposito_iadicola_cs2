@@ -125,43 +125,43 @@ public class PaymentProcessor
 
 #endregion
 
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        IGreeter gr = new ConsoleGreeter();
-        GreetingService grs = new GreetingService(gr);
-        grs.Greeting();
+// public class Program
+// {
+//     public static void Main(string[] args)
+//     {
+//         IGreeter gr = new ConsoleGreeter();
+//         GreetingService grs = new GreetingService(gr);
+//         grs.Greeting();
 
-        int choose = Input.Read<int>("Choose your payment method (1 = Stripe, 2 = PayPal)");
+//         int choose = Input.Read<int>("Choose your payment method (1 = Stripe, 2 = PayPal)");
 
-        IPaymentGetway? ipg = null; 
-        switch (choose)
-        {
-            case 1:
-                ipg = new StripeGetway();
-                break;
+//         IPaymentGetway? ipg = null; 
+//         switch (choose)
+//         {
+//             case 1:
+//                 ipg = new StripeGetway();
+//                 break;
 
-            case 2:
-                ipg = new PayPalGetway();
-                break;
+//             case 2:
+//                 ipg = new PayPalGetway();
+//                 break;
 
-            default:
-                Console.WriteLine("Invalid method");
-                break;
-        }
+//             default:
+//                 Console.WriteLine("Invalid method");
+//                 break;
+//         }
 
-        if (ipg != null)
-        {
-            PaymentProcessor pp = new PaymentProcessor(ipg);
-            System.Console.WriteLine(pp);
-        }
-        else
-        {
-            Console.WriteLine("Operazione annullata: nessun metodo di pagamento valido scelto.");
-        }
-    }
+//         if (ipg != null)
+//         {
+//             PaymentProcessor pp = new PaymentProcessor(ipg);
+//             System.Console.WriteLine(pp);
+//         }
+//         else
+//         {
+//             Console.WriteLine("Operazione annullata: nessun metodo di pagamento valido scelto.");
+//         }
+//     }
 
 
 
-}
+// }
