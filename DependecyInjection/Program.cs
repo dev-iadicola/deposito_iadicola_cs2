@@ -9,6 +9,7 @@ public class Program
     {
         List<ITest> tests = new()
         {
+            new NotifyMethodInjectionTest(),
                 new BookHubTest(),
                 new PrinterTest(),
                 new PaymentTest(),
