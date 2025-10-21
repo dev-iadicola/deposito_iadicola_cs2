@@ -1,16 +1,17 @@
 
 using DependecyInjection.Utils;
 using DependecyInjection.Test;
+using DependecyInjection.BookHub;
 public class Program
 {
     public static void Main(string[] args)
 
     {
         List<ITest> tests = new()
-            {
+        {
+                new BookHubTest(),
                 new PrinterTest(),
                 new PaymentTest(),
-
             };
 
         while (true)
@@ -23,7 +24,7 @@ public class Program
             Console.Write("Scelta: ");
             if (!int.TryParse(Console.ReadLine(), out int scelta) || scelta < 0 || scelta > tests.Count)
             {
-                Console.WriteLine("❌ Scelta non valida.");
+                Console.WriteLine("Scelta non valida.");
                 continue;
             }
 
