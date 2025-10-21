@@ -12,6 +12,25 @@ public interface IPaymentProcessor
 {
     public bool ProcessPayment(decimal amount);
 }
+
+public abstract class ABasePayment : IPaymentGetway, IPaymentProcessor
+{
+    protected ABasePayment()
+    {
+    }
+
+    public bool ProcessPayment(decimal amount)
+    {
+        return false;
+    }
+
+    public override string ToString()
+    {
+        return "metodo di pagamento: ";
+    }
+
+
+}
 public class PayPalGetway : IPaymentGetway, IPaymentProcessor
 {
     public bool ProcessPayment(decimal amount)
