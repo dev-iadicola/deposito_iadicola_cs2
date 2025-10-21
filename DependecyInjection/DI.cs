@@ -1,4 +1,5 @@
 ﻿
+using DependecyInjection.Test;
 using DependecyInjection.Utils;
 #region INPUT
 public class Input
@@ -112,43 +113,53 @@ public class PaymentProcessor
     }
 }
 
+public class PaymentTest :ITest
+{
+    public string Name => "Test del metodo di pagamento";
+
+    public void Run()
+    {
+        IGreeter gr = new ConsoleGreeter();
+        GreetingService grs = new GreetingService(gr);
+        grs.Greeting();
+
+        int choose = Input.Read<int>("Choose your payment method (1 = Stripe, 2 = PayPal)");
+
+        IPaymentGetway? ipg = null; 
+        switch (choose)
+        {
+            case 1:
+                ipg = new StripeGetway();
+                break;
+
+            case 2:
+                ipg = new PayPalGetway();
+                break;
+
+            default:
+                Console.WriteLine("Invalid method");
+                break;
+        }
+
+        if (ipg != null)
+        {
+            PaymentProcessor pp = new PaymentProcessor(ipg);
+            System.Console.WriteLine(pp);
+        }
+        else
+        {
+            Console.WriteLine("Operazione annullata: nessun metodo di pagamento valido scelto.");
+        }
+    }
+}
+
 #endregion
 
 // public class Program
 // {
 //     public static void Main(string[] args)
 //     {
-//         IGreeter gr = new ConsoleGreeter();
-//         GreetingService grs = new GreetingService(gr);
-//         grs.Greeting();
-
-//         int choose = Input.Read<int>("Choose your payment method (1 = Stripe, 2 = PayPal)");
-
-//         IPaymentGetway? ipg = null; 
-//         switch (choose)
-//         {
-//             case 1:
-//                 ipg = new StripeGetway();
-//                 break;
-
-//             case 2:
-//                 ipg = new PayPalGetway();
-//                 break;
-
-//             default:
-//                 Console.WriteLine("Invalid method");
-//                 break;
-//         }
-
-//         if (ipg != null)
-//         {
-//             PaymentProcessor pp = new PaymentProcessor(ipg);
-//             System.Console.WriteLine(pp);
-//         }
-//         else
-//         {
-//             Console.WriteLine("Operazione annullata: nessun metodo di pagamento valido scelto.");
-//         }
+//         
 //     }
 
 
