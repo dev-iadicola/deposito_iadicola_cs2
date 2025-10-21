@@ -1,5 +1,6 @@
 
 #nullable disable
+using System.Reflection.Metadata.Ecma335;
 using DependecyInjection.Test;
 using DependecyInjection.Utils;
 
@@ -88,6 +89,32 @@ public static class GetwayFactory
         }
     }
 }
+
+public static class NotificationFacotry
+{
+    public static INotificationSender Create(int code)
+    {
+        switch (code)
+        {
+            case 2: return new SmsSender();
+            case 1: return new EmailSender();
+            default: throw new ArgumentException("Codice non trovato");
+        }
+    }
+}
+public static class DiscountFacotry
+{
+    public static IPricingStrategy Create(string code)
+    {
+        switch (code)
+        {
+            case "CODICE": Logger.Write("Codice sconto applicato del 20%!"); return new DiscountPricing();
+            default: Logger.Write($"Codice sconto {code} non valido");  return new StandardPricing();
+        }
+    }
+}
+
+
 #endregion
 
 #region  ORDER SERVICE
@@ -145,14 +172,19 @@ public class BookHubTest : ITest
         OrderService order = new OrderService(new InventoryService(), GetwayFactory.Create(codeGetWay));
 
         // SETTER INJECTION
-        order.NotificationSender = new EmailSender();
-        order.PricingStrategy = new DiscountPricing();
+        int codeNotyfy = Input.Read<int>("Scegli metodo di Notifica: \n1.Email\n2SMS");
 
-        // Esecuzione ordine
+
+        order.NotificationSender = NotificationFacotry.Create(codeNotyfy);
+        string codeDiscount = Input.Read<string>("Inserisci codice sconto!");
+
+        order.PricingStrategy = DiscountFacotry.Create(codeDiscount);
+
+        // Esecuzione ordine1
+
         order.PlaceOrder(product);
 
-        Console.WriteLine("Premi un tasto per uscire...");
-        Console.ReadKey();
+       
 
 
     }

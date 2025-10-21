@@ -30,7 +30,7 @@ public class StripeGetway : IPaymentGetway, IPaymentProcessor
 {
      public bool ProcessPayment(decimal amount)
     {
-        Logger.Write($"Meotdo[{this}]: pagamenti di {amount}");
+        Logger.Write($"Meotdo[{this}]: pagamento di {amount}");
         return true;
     }
     public override string ToString() => "Stripe";
