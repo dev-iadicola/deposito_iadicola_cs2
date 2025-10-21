@@ -9,7 +9,7 @@ public enum TipoTransazione { Acquisto = 1, Rimborso = 2, Trasferimento = 3 }
 public class EnumTest : ITest
 {
 
-    public string Name => "Test degli ENUM Ruoli";
+    public string Name => "Test degli ENUM";
 
     public void Run()
     {
