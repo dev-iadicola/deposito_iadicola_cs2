@@ -1,3 +1,5 @@
+
+using DependecyInjection.Utils;
 #region  ENTITY
 public class Applicazione
 {
@@ -117,9 +119,9 @@ public class AppConfig
 #endregion
 
 
-public class Program
+public class OrdiniClient
 {
-    public static void Main(string[] args)
+    public static void Exe()
 
     {
         var config = AppConfig.Instance("€", 22);
