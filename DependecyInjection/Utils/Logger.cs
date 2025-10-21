@@ -17,13 +17,18 @@ public class ConsoleLogger : ILogger
 
 }
 
- public static class Logger
-    {
-        private static readonly ConsoleLogger consoleLogger = new ConsoleLogger();
+public static class Logger
+{
+    private static readonly ConsoleLogger consoleLogger = new ConsoleLogger();
 
-        public static void Write(string message)
-        {
-            consoleLogger.Log(message);
-        }
+    public static void Write(string message)
+    {
+        consoleLogger.Log(message);
     }
+
+    public static void Error(string message)
+    {
+        consoleLogger.Log($"[ERROR]: {message}");
+    }
+}
 

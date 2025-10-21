@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Xml.Serialization;
+using DependecyInjection.Test;
 
 namespace DependecyInjection.Utils;
 
@@ -27,7 +28,7 @@ public class JsonFormater : IExportFormatter
 {
     public string Format(Data data)
     {
-     JsonSerializerOptions prettyeJson =   new JsonSerializerOptions{ WriteIndented = true}
+        JsonSerializerOptions prettyeJson = new JsonSerializerOptions { WriteIndented = true };
         return JsonSerializer.Serialize(data, prettyeJson );
     }
 
@@ -76,7 +77,39 @@ public class DataExport
 }
 #endregion
 
-public class DataExportTest
+public class DataExportTest : ITest
 {
-    
+    public string Name => "Test sulla conversione dei dati da classe a JSON o XML";
+
+    public void Run()
+    {
+        JsonFormater json = new JsonFormater();
+        XmlFormatter xml = new XmlFormatter();
+        //List<Data> data;      volevo converitr la lista :'(
+        // context iniziale
+            var exporter = new DataExport(json);
+
+        while (true)
+        {
+             var data = new Data
+            {
+                Name = Input.Read<string>("Inserisci nome"),
+                Quantity = Input.Read<int>("Inserisci quanità"),
+                Price = Input.Read<decimal>("Insersisci Prezzo"),
+            };
+
+              int input = Input.Read<int>(
+            "Converti i dati:\n1.JSON\n2.XML\n0.Esci"
+            );
+            switch (input)
+            {
+                case 1: exporter.SetFormatter(json); exporter.Export(data); break;
+                case 2: exporter.SetFormatter(xml); exporter.Export(data); break;
+                case 0: Logger.Write("Uscita dal programma"); return;
+                default: throw new InvalidDataException($"Codice {input} non valido");
+            }
+
+        }
+       
+    }
 }
