@@ -6,6 +6,7 @@ public enum LevelAccess { Ospite, Utente, Amministratore }
 
 public enum TipoTransazione { Acquisto = 1, Rimborso = 2, Trasferimento = 3 }
 
+
 public class EnumTest : ITest
 {
 
@@ -18,8 +19,8 @@ public class EnumTest : ITest
             int input = Input.Read<int>(
                   "Scelgi tra L'esercizio" +
                   "\n1. sui privilegi dell'utente \n" +
-                  "2. esercizio tipo Transazione (1)\n" +
-                  "0. esci (1)\n"
+                  "2. esercizio tipo Transazione\n" +
+                  "0. esci\n"
                   );
             switch (input)
             {
