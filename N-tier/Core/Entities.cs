@@ -165,7 +165,8 @@ public class InMemoryRepository<E> : IRepository<E> where E : IEntity // Forza a
 
 #endregion
 
-#region NOTIFICA + INTERFACCIA
+//TODO: Probabilmente eliminero utilizzando il NotofiService su ApplicationService (devo vedere)
+#region NOTIFICA + INTERFACCIA 
 public interface INotificationEntity
 {
     static void Entity(string message) { }

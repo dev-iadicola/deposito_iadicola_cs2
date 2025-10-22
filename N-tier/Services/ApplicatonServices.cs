@@ -26,17 +26,32 @@ public interface IService<E>
 
 }
 #endregion
-class ProductServices : IService<Product>
-{
-    private readonly IRepository<Product>? _repo;
-    private readonly INotificationService? _notifyService;
 
-    public ProductServices(IRepository<Product> products, INotificationService notofyService)
+public abstract class BaseService<E> : IService<E>
+{
+    protected readonly IRepository<E>? _repo;
+    protected readonly INotificationService? _notifyService;
+
+    public BaseService(IRepository<E> repo, INotificationService notofy)
     {
-        _repo = products;
-        _notifyService = notofyService;
+        _repo = repo; _notifyService = notofy;
     }
 
+    public virtual IEnumerable<E> GetAll()
+    {
+        return _repo.GetAll();
+    }
+
+    public virtual void Remove(int id)
+    {
+        _repo.Remove(id);
+    }
+}
+
+#region PRODUCT SERVICE
+class ProductServices : BaseService<Product>
+{
+    public ProductServices(IRepository<Product> products, INotificationService notofyService):base(products, notofyService){}
 
     public void Create(string name, decimal price)
     {
@@ -76,10 +91,39 @@ class ProductServices : IService<Product>
         _notifyService?.Notofy($"Product Updated successfully!");
     }
 }
+#endregion
 
+#region CUSTOMER SERVICE
+public class CustomerService : IService<Customer>
+{
+
+    public CustomerService(IRepository<Customer> repo, INotificationService notify)
+    {
+        
+    }
+    private readonly IRepository<Customer>? _repo;
+    private readonly INotificationService? _notifyService;
+    public IEnumerable<Customer> GetAll()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Remove(int id)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+#endregion
+#region ORDERS SERVICE
 public class OrderService : IService<Order>
 {
     private readonly IRepository<Order>? _repo;
+    public OrderService(IRepository<Order> repo, INotificationService notofyService)
+    {
+        _repo = repo;
+        _notifyService = notofyService;
+    }
     private readonly INotificationService? _notifyService;
     // public int Id { get; set; }
     // public Customer? Customer { get; set; }
@@ -88,7 +132,7 @@ public class OrderService : IService<Order>
     // public decimal Total => Items.Sum(i => i.Total());
     public void Create(Customer customer, List<OrderItem> listItem, OrderStatus status = OrderStatus.New)
     {
-        
+
         Order order = new Order()
         {
             Id = _repo.GetAll().Count() + 1,
@@ -96,15 +140,11 @@ public class OrderService : IService<Order>
             Items = listItem,
             Status = status,
         };
-            _repo.Add(order);
+        _repo.Add(order);
         _notifyService?.Notofy($"Order with name: {customer.Name} created!");
     }
 
-    public OrderService(IRepository<Order> repo, INotificationService notofyService)
-    {
-        _repo = repo;
-        _notifyService = notofyService;
-    }
+
     public IEnumerable<Order> GetAll()
     {
         return _repo.GetAll();
@@ -115,9 +155,10 @@ public class OrderService : IService<Order>
         _repo?.Remove(id);
     }
 
-    //Devo trovare un modo per fare un update più smart. 
+    //TODO: Devo trovare un modo per fare un update più smart. 
     public void Update(int id, Customer customer, List<OrderItem> listItem, OrderStatus status = OrderStatus.Shipped)
-    {   Order order = new Order()
+    {
+        Order order = new Order()
         {
             Id = id,
             Customer = customer,
@@ -127,3 +168,4 @@ public class OrderService : IService<Order>
         _repo?.Update(id, order);
     }
 }
+#endregion
