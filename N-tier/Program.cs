@@ -1,12 +1,16 @@
 ﻿
-using N_tier.Test;
+using N_tier.Vendor.Test;
+using N_tier.Services;
+using N_tier.Core;
 public class Program
 {
     public static void Main(string[] args)
 
     {
         List<ITest> tests = new()
+
         {
+            new AppContextTest(),
             new NTierTest(),
            
             };
