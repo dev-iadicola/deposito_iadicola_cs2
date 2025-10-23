@@ -1,8 +1,12 @@
 ﻿// Definizione del delegate
+using N_tier.Vendor;
+
 delegate void Saluto(string nome);
 
 // Esercizio 1
-delegate int Operazione(int a, int b); 
+delegate int Operazione(int a, int b);
+
+delegate void Logger(string message);
 
 class Program
 {
@@ -29,10 +33,23 @@ class Program
         Operazione moltiplica = Moltiplica;
 
         System.Console.WriteLine($"Somma: {EseguiOperazione(4, 2, somma)}");
-        System.Console.WriteLine($"Moltiplica: {EseguiOperazione(4,2, moltiplica)}");
+        System.Console.WriteLine($"Moltiplica: {EseguiOperazione(4, 2, moltiplica)}");
+
+        // Esercizio 2
+        Logger logConsole = LogToConsole; // logga su file 
+        Logger logFile = LogToFile; // log su txt
+
+        Logger log = logConsole + logFile;
+        log(Input.Read<string>("Scrivi qualcosa su log. Verrà registrato su console e su file log"));
 
     }
+    // ESEMPIO 
+  static void Ciao(string nome)
+    {
+        Console.WriteLine($"Ciao, {nome}");
+    }
 
+    // ESERCIZIO 1
     static int EseguiOperazione(int x, int y, Operazione op)
     {
         return op(x, y);
@@ -41,8 +58,16 @@ class Program
     static int Somma(int a, int b) => a - b;
     static int Moltiplica(int a, int b) => a * b;
 
-    static void Ciao(string nome)
+  // ESERCIZIO 2
+    static void LogToConsole(string message)
     {
-        Console.WriteLine($"Ciao, {nome}");
+        System.Console.WriteLine($"[CONSOLE]: {DateTime.Now} - {message}");
+    }
+
+    static void LogToFile(string message)
+    {
+        string path = "log.txt";
+        File.AppendAllText(path, $"[LOG]: {DateTime.Now}: {message} {Environment.NewLine}");
+        Console.WriteLine($"Messaggio scritto in {path}");
     }
 }

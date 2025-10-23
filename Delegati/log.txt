@@ -1,0 +1,3 @@
+[File] 23/10/2025 11:12:41: Test di prova[LOG]: 23/10/2025 11:14:45: Test 2: Questo è un test di prova nel file log.txt. \n per eseguire il software scrivere su console dotnet run .[LOG]: 23/10/2025 11:16:27: Test accapo 
+[LOG]: 23/10/2025 11:17:15: test accapo 2 
+[LOG]: 23/10/2025 11:17:34: test accapo success 
