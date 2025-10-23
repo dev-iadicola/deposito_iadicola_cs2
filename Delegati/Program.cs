@@ -1,7 +1,10 @@
 ﻿// Definizione del delegate
 using System.Reflection.Metadata.Ecma335;
-using N_tier.Vendor;
-using N_tier.Vendor.Test;
+using Delegati.Projects;
+using Delegati.Vendor;
+using Delegati.Vendor.Test;
+using Delegati.Vendor;
+using Delegati.Vendor.Test;
 
 
 #region DELEGATI
@@ -93,7 +96,7 @@ public class Esercizio2 : ITest
     {
         string path = "log.log";
         File.AppendAllText(path, $"[LOG]: {DateTime.Now}: {message} {Environment.NewLine}");
-        Console.WriteLine($"Messaggio scritto in {path}");
+       
     }
 }
 #endregion
@@ -104,6 +107,7 @@ class Program
     static void Main()
     {
         List<ITest> list = new List<ITest>(){
+            new PaymentTest(),
             new Esempio(),
             new Esercizio1(),
             new Esercizio2(),
@@ -140,6 +144,8 @@ class Program
                 Console.Clear();
                 System.Console.WriteLine("Scelta non valida!");
             }
+            System.Console.WriteLine("Test svolto. premi un tasto per continuare");
+            Console.ReadLine();
 
         }
 

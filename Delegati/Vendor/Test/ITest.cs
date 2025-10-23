@@ -1,5 +1,5 @@
 
-namespace N_tier.Vendor.Test;
+namespace Delegati.Vendor.Test;
 public interface ITest
 {
     string Name { get; }

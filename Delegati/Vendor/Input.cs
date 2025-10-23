@@ -1,4 +1,4 @@
-namespace N_tier.Vendor;
+namespace Delegati.Vendor;
 public class Input
 {
     public static T Read<T>(string message)

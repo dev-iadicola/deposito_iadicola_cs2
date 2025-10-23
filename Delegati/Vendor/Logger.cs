@@ -1,5 +1,6 @@
-namespace N_tier.Vendor;
+namespace Delegati.Vendor;
 
+delegate void LoggerDel(string message);
 public interface ILogger
 {
     void Log(string message);
@@ -37,7 +38,7 @@ public class ConsoleLogger : ILogger
     }
 }
 
-public static class Logger
+public static class Logger 
 {
     private static readonly ConsoleLogger consoleLogger = new ConsoleLogger();
 
@@ -58,5 +59,28 @@ public static class Logger
     {
         consoleLogger.Log($"[ERROR]: {message}");
     }
+
+
+    public static void Log(string message)
+    {
+        LoggerDel logConsole = LogToConsole; // logga su console 
+        LoggerDel logFile = LogToFile; // log su txt
+        LoggerDel log = logConsole + logFile; // sommiamo i due delegate (come se fosse un operazione)
+        log($"[LOG]: {DateTime.Now} - {message}");
+    }
+    static void LogToConsole(string message)
+    {
+        System.Console.WriteLine($"[CONSOLE]: {DateTime.Now} - {message}");
+    }
+
+    static void LogToFile(string message)
+    {
+        string path = "log.log";
+        File.AppendAllText(path, $"[LOG]: {DateTime.Now}: {message} {Environment.NewLine}");
+        Console.WriteLine($"Messaggio scritto in {path}");
+    }
+
 }
+
+
 
