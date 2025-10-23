@@ -36,11 +36,11 @@ class Program
         System.Console.WriteLine($"Moltiplica: {EseguiOperazione(4, 2, moltiplica)}");
 
         // Esercizio 2
-        Logger logConsole = LogToConsole; // logga su file 
+        Logger logConsole = LogToConsole; // logga su console 
         Logger logFile = LogToFile; // log su txt
 
-        Logger log = logConsole + logFile;
-        log(Input.Read<string>("Scrivi qualcosa su log. Verrà registrato su console e su file log"));
+        Logger log = logConsole + logFile; // sommiamo i due delegate (come se fosse un operazione)
+        log(Input.Read<string>("Scrivi qualcosa su log. Verrà registrato su console e su file log")); // input dell'utente 
 
     }
     // ESEMPIO 
