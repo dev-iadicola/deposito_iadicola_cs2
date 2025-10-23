@@ -148,7 +148,8 @@ public class InMemoryRepository<E> : IRepository<E> where E : IEntity // Forza a
         // L'ENTITà NON ESISTE
         if (entity == null)
         {
-             throw new ArgumentNullException($"[WARN] Nessuna entità trovata con Id = {id} in {typeof(E).Name}.");
+            Logger.Warning($"Nessun risultato trovato con Id = {id} in {typeof(E).Name}.");
+             //throw new ArgumentNullException($"[WARN] Nessuna entità trovata con Id = {id} in {typeof(E).Name}.");
         }
 
         // ritorna l'entità

@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using N_tier.Services;
 using N_tier.Vendor.Test;
 
@@ -9,21 +10,29 @@ public class AppContext
     // per mt
     private static readonly object _lock = new();
 
-     
-    public INotificationService Notify { get; }
-    public IRepository<Product> ProductRepo { get; }
-    public IRepository<Customer> CustomerRepo { get; }
-    public IRepository<Order> OrderRepo { get; }
-    public IRepository<OrderItem> OrderItemRepo { get; }
+    private INotificationService Notify = new NotifyService();
+
+    private IRepository<Product> _productRepo = new InMemoryRepository<Product>();
+    private IRepository<Customer> _customerRepo = new InMemoryRepository<Customer>();
+    private IRepository<Order> _orderRepo = new InMemoryRepository<Order>();
+    private IRepository<OrderItem> _orderItemRepo = new InMemoryRepository<OrderItem>();
+
+    public ProductServices productService;
+    public CustomerService customerService;
+    public OrderItemService orderItemService;
+
+    public OrderService orderService;
+
+
+
     private AppContext()
     {
-        Notify = new NotifyService();
 
-        // Permette di avere la gestione delle entità
-        ProductRepo = new InMemoryRepository<Product>();
-        CustomerRepo = new InMemoryRepository<Customer>();
-        OrderRepo = new InMemoryRepository<Order>();
-        OrderItemRepo = new InMemoryRepository<OrderItem>();
+         productService = new ProductServices(_productRepo, Notify);
+         customerService = new CustomerService(_customerRepo, Notify);
+         orderItemService = new OrderItemService(_orderItemRepo, Notify);
+         orderService = new OrderService(_orderRepo, Notify);
+
     }
 
     public static AppContext GetInstance()
@@ -47,58 +56,54 @@ public class AppContextTest : ITest
         var app = AppContext.GetInstance(); //Is.
 
         // Servizi
-        var productService = new ProductServices(app.ProductRepo, app.Notify);
-        var customerService = new CustomerService(app.CustomerRepo, app.Notify);
-        var orderItemService = new OrderItemService(app.OrderItemRepo, app.Notify);
-        var orderService = new OrderService(app.OrderRepo, app.Notify);
 
 
         // SEZIONE 1: TEST PRODOTTI
         Section("TEST PRODOTTI");
 
-        productService.Create("Monitor 27''", 249.99m);
-        productService.Create("Mouse Logitech", 39.90m);
-        productService.Create("Tastiera Meccanica", 79.90m);
-        ShowList("Tutti i prodotti", app.ProductRepo.GetAll());
+        app.productService.Create("Monitor 27''", 249.99m);
+        app.productService.Create("Mouse Logitech", 39.90m);
+        app.productService.Create("Tastiera Meccanica", 79.90m);
+        ShowList("Tutti i prodotti", app.productService.GetAll());
 
-        productService.Update(2, "Mouse Logitech MX Master 3", 99.90m);
-        ShowList("Prodotti dopo update", app.ProductRepo.GetAll());
+        app.productService.Update(2, "Mouse Logitech MX Master 3", 99.90m);
+        ShowList("Prodotti dopo update", app.productService.GetAll());
 
-        productService.Remove(3);
-        ShowList("Prodotti dopo rimozione", app.ProductRepo.GetAll()); Section("🧾 TEST ORDER ITEM");
+        app.productService.Remove(3);
+        ShowList("Prodotti dopo rimozione", app.productService.GetAll()); Section("🧾 TEST ORDER ITEM");
 
-        var product1 = app.ProductRepo.GetById(1)!;
-        var product2 = app.ProductRepo.GetById(2)!;
+        var product1 = app.productService.GetById(1)!;
+        var product2 = app.productService.GetById(2)!;
 
-        orderItemService.Create(1, product1);
-        orderItemService.Create(2, product2);
-        ShowList("Tutti gli OrderItem", app.OrderItemRepo.GetAll());
+        app.orderItemService.Create(1, product1);
+        app.orderItemService.Create(2, product2);
+        ShowList("Tutti gli OrderItem", app.orderItemService.GetAll());
 
-        orderItemService.Update(2, 3, product2);
-        ShowList("OrderItem dopo update quantità", app.OrderItemRepo.GetAll());
+        app.orderItemService.Update(2, 3, product2);
+        ShowList("OrderItem dopo update quantità", app.orderItemService.GetAll());
 
         // ---------------------SEZIONE 4: TEST ORDINI
-       
-        Section("TEST ORDINI");
-        customerService.Create("name");
-        var customer = app.CustomerRepo.GetById(1)!;
-        var items = app.OrderItemRepo.GetAll().ToList();
 
-        orderService.Create(customer, items);
-        ShowList("Tutti gli ordini", app.OrderRepo.GetAll());
+        Section("TEST ORDINI");
+        app.customerService.Create("name");
+        var customer = app.customerService.GetById(1)!;
+        var items = app.orderItemService.GetAll().ToList();
+
+        app.orderService.Create(customer, items);
+        ShowList("Tutti gli ordini", app.orderService.GetAll());
 
         // Test Update Ordine (cambio stato)
-        orderService.Update(1, customer, items, OrderStatus.Paid);
-        ShowList("Ordini dopo cambio stato a 'Paid'", app.OrderRepo.GetAll());
+        app.orderService.Update(1, customer, items, OrderStatus.Paid);
+        ShowList("Ordini dopo cambio stato a 'Paid'", app.orderService.GetAll());
 
         // Test Stato Shipped
-        orderService.Update(1, customer, items, OrderStatus.Shipped);
-        ShowList("Ordini dopo cambio stato a 'Shipped'", app.OrderRepo.GetAll());
+        app.orderService.Update(1, customer, items, OrderStatus.Shipped);
+        ShowList("Ordini dopo cambio stato a 'Shipped'", app.orderService.GetAll());
 
         // ------TEST RIMOZIONE ORDINI
         Section("TEST RIMOZIONE ORDINE");
-        orderService.Remove(1);
-        ShowList("Ordini dopo rimozione", app.OrderRepo.GetAll());
+        app.orderService.Remove(1);
+        ShowList("Ordini dopo rimozione", app.orderService.GetAll());
 
 
     }

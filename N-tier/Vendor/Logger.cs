@@ -46,6 +46,8 @@ public static class Logger
         consoleLogger.Log(message);
     }
 
+    public static void Warning(string message) => consoleLogger.Warning(message);
+
     public static void Success(string message)
     {
         consoleLogger.Success(message);

@@ -56,13 +56,18 @@ public abstract class BaseService<E> : IService<E>
     // Message: scrittura più pulita con un solo metodo anziché chiamare la proprietà e metodo
     protected void Message(string message)
     {
-        _notifyService?.Notofy(message);
+        _notifyService!.Notofy(message);
     }
 
-   // Ci permette di visualizzare la lista dell'entità 
+    // Ci permette di visualizzare la lista dell'entità 
     public virtual IEnumerable<E> GetAll()
     {
         return _repo!.GetAll();
+    }
+    
+    public virtual E GetById(int id)
+    {
+        return _repo!.GetById(id);
     }
 
     // rimuovi record
@@ -75,7 +80,7 @@ public abstract class BaseService<E> : IService<E>
 }
 #endregion
 #region PRODUCT SERVICE
-class ProductServices : BaseService<Product>
+public class ProductServices : BaseService<Product>
 {
     public ProductServices(IRepository<Product> products, INotificationService notofyService) : base(products, notofyService) { }
 
