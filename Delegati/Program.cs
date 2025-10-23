@@ -1,20 +1,28 @@
 ﻿// Definizione del delegate
+using System.Reflection.Metadata.Ecma335;
 using N_tier.Vendor;
+using N_tier.Vendor.Test;
 
-delegate void Saluto(string nome);
 
-// Esercizio 1
+#region DELEGATI
 delegate int Operazione(int a, int b);
 
 delegate void Logger(string message);
+#endregion
 
-class Program
+#region CLASSI TEST
+
+
+public class Esempio : ITest
 {
+    delegate void Saluto(string nome);
+
+    string ITest.Name => "Esempio di come usare i delegate";
     static Action<string> saluta = nome => System.Console.WriteLine($"ciao, {nome}");
     static Func<int, int, int> somma = (a, b) => a + b;
 
     static event Action action;
-    static void Main()
+    public void Run()
     {
         // Assegno il metodo Ciao al delegate
         Saluto s = Ciao;
@@ -28,6 +36,19 @@ class Program
         // Invocazione dell'evento (solo se non è null)
         action?.Invoke();
 
+    }
+    static void Ciao(string nome)
+    {
+        Console.WriteLine($"Ciao, {nome}");
+    }
+}
+
+class Esercizio1 : ITest
+{
+    string ITest.Name => "Esercizio 1: somma e calcolo";
+
+    public void Run()
+    {
         // esercizio 1
         Operazione somma = Somma;
         Operazione moltiplica = Moltiplica;
@@ -35,20 +56,7 @@ class Program
         System.Console.WriteLine($"Somma: {EseguiOperazione(4, 2, somma)}");
         System.Console.WriteLine($"Moltiplica: {EseguiOperazione(4, 2, moltiplica)}");
 
-        // Esercizio 2
-        Logger logConsole = LogToConsole; // logga su console 
-        Logger logFile = LogToFile; // log su txt
-
-        Logger log = logConsole + logFile; // sommiamo i due delegate (come se fosse un operazione)
-        log(Input.Read<string>("Scrivi qualcosa su log. Verrà registrato su console e su file log")); // input dell'utente 
-
     }
-    // ESEMPIO 
-  static void Ciao(string nome)
-    {
-        Console.WriteLine($"Ciao, {nome}");
-    }
-
     // ESERCIZIO 1
     static int EseguiOperazione(int x, int y, Operazione op)
     {
@@ -57,8 +65,25 @@ class Program
 
     static int Somma(int a, int b) => a - b;
     static int Moltiplica(int a, int b) => a * b;
+}
 
-  // ESERCIZIO 2
+public class Esercizio2 : ITest
+{
+    public string Name => "Esercizio 2: Log su console e file log";
+
+    public void Run()
+    {
+        // Esercizio 2
+        Logger logConsole = LogToConsole; // logga su console 
+        Logger logFile = LogToFile; // log su txt
+
+        Logger log = logConsole + logFile; // sommiamo i due delegate (come se fosse un operazione)
+        log(Input.Read<string>("Scrivi qualcosa su log. Verrà registrato su console e su file log")); // input dell'utente 
+
+
+    }
+
+    // ESERCIZIO 2
     static void LogToConsole(string message)
     {
         System.Console.WriteLine($"[CONSOLE]: {DateTime.Now} - {message}");
@@ -66,8 +91,60 @@ class Program
 
     static void LogToFile(string message)
     {
-        string path = "log.txt";
+        string path = "log.log";
         File.AppendAllText(path, $"[LOG]: {DateTime.Now}: {message} {Environment.NewLine}");
         Console.WriteLine($"Messaggio scritto in {path}");
     }
 }
+#endregion
+
+#region  PROGRAM
+class Program
+{
+    static void Main()
+    {
+        List<ITest> list = new List<ITest>(){
+            new Esempio(),
+            new Esercizio1(),
+            new Esercizio2(),
+        };
+
+        while (true)
+        {
+            System.Console.WriteLine("\n===LISTA DEI TEST===");
+
+            for(int i = 0; i < list.Count; i++)
+            {
+                System.Console.WriteLine($"{i + 1} {list[i].Name}"); // stampo i nomi dei test con l'indice da scegliere
+            }
+
+            System.Console.WriteLine("0. Exit");
+
+            int input = Input.Read<int>("Seleziona test.");
+
+            // uscita
+            if (input == 0)
+            {
+                System.Console.WriteLine("Uscita dal programma.");
+                return;
+            }
+            //esecuzione programma
+            if (input > 0 && input <= list.Count)
+            {
+                Console.Clear(); // pulizia console
+                System.Console.WriteLine($"=== Esecuzione del test: {list[input - 1].Name}");
+                list[input - 1].Run();
+            }
+            else
+            {
+                Console.Clear();
+                System.Console.WriteLine("Scelta non valida!");
+            }
+
+        }
+
+
+
+    }
+}
+#endregion
