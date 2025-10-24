@@ -20,3 +20,14 @@ FROM
 ORDER BY
 Population DESC
 
+SELECT c.Name AS "Nomi Città" , c.Population "Popolazione Cittò", co.Name "Contry" , co.Population "Contry pop." 
+	FROM 
+		city AS c, country AS co 
+	LIMIT 10;
+	
+SELECT MAX(population)"Popolazione tutte le città" FROM city;
+-- max pop x cities
+SELECT c1.NAME , (SELECT max(population) FROM city WHERE NAME = c1.NAME)
+FROM city AS c1;
+
+
