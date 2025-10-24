@@ -5,13 +5,12 @@
 SELECT continent, Population
 FROM country
 GROUP BY continent;
-
 -- esercizio 1. trova tutti i continenti tranne quelli europeo
 SELECT
  DISTINCT(Region) region 
 FROM
  country 
-WHERE continet <> "Europe";
+WHERE Continent <> "Europe";
 -- 
 -- es 2 prendi le città più popolose delgi USA
 SELECT  name, Population
