@@ -45,7 +45,7 @@ public class Payment : IPayment
 
     public void Pay(string id, decimal amount)
     {
-        Logger.Log($"[{Type}] Payment Completed: {id}, amount {amount}");
+        Logger.Log($"[{Type}] Payment Completed: {id}, amount {amount:C}");
     }
 
 
@@ -285,13 +285,11 @@ public class PaymentTest : ITest
         // prendiamo il metodo di pagamento selezionato
         return typePaymentenums[input - 1];
     }
-    private static decimal randomDecimal()
+    private static decimal randomDecimal(decimal min = 5.5m, decimal max = 100.0m)
     {
         Random random = new Random();
-        decimal min = 5.5M;
-        decimal max = 100M;
 
-        decimal randomDecimal = min + (random.NextInt64() * (max - min));
+        decimal randomDecimal = min + ((decimal)random.NextDouble() * (max - min));
         return randomDecimal;
     }
 }
