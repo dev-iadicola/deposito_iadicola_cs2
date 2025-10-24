@@ -1,10 +1,7 @@
-﻿// Definizione del delegate
-using System.Reflection.Metadata.Ecma335;
+﻿using System.Reflection.Metadata.Ecma335;
 using Delegati.Projects;
-using Delegati.Vendor;
-using Delegati.Vendor.Test;
-using Delegati.Vendor;
-using Delegati.Vendor.Test;
+using IadicolaCore.Test;
+using IadicolaCore.Utils;
 
 
 #region DELEGATI
@@ -15,7 +12,7 @@ delegate void Logger(string message);
 
 #region CLASSI TEST
 
-
+// TODO: installa la libreria necessaria per esegiore il programma: dotnet add package IadicolaCore --version 1.0.1
 public class Esempio : ITest
 {
     delegate void Saluto(string nome);
@@ -70,7 +67,7 @@ class Esercizio1 : ITest
     static int Moltiplica(int a, int b) => a * b;
 }
 
-public class Esercizio2 : ITest
+public class Esercizio2 : IadicolaCore.Test.ITest
 {
     public string Name => "Esercizio 2: Log su console e file log";
 

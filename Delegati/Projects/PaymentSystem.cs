@@ -3,9 +3,10 @@ namespace Delegati.Projects;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
-using Vendor;
-using Vendor.Test;
-using Vendor.Utils;
+using IadicolaCore.Test;
+using IadicolaCore.Utils;
+using IadicolaCore.Log;
+using IadicolaCore.Vendor.Utils;
 
 #region  ENUM E INTERFACCE 
 public enum TypePayment
@@ -83,6 +84,7 @@ public class ExceptionLog : Exception
     {
         if (_inner != null)
         {
+
             Logger.Error($"[ERROR] {_message}");
             Logger.Log($"Type Error: {_inner.GetType().Name}\nMessage: {_inner.Message}\nStackTrace: {_inner.StackTrace}");
         }
@@ -188,13 +190,20 @@ public class PaymentService
         this.payment = payment; this.discount = discount;
     }
 
-    public void Execute(string id, decimal import)
+    public void Execute(string id, decimal import, int? percentileDiscount = null)
     {
-        payment!.Pay(id, import);
+        decimal total = import;
+        // inseriamo lo sconto solo se i due parametri esistono
+        if (discount != null && percentileDiscount != null)
+        {
+            total = discount!.Applicate(import, (int)percentileDiscount!);
+        }
+
+        payment!.Pay(id, total);
 
         if (OnPayCompleted != null)
         {
-            OnPayCompleted(id, import);
+            OnPayCompleted(id, total);
         }
     }
 
@@ -218,15 +227,17 @@ public class PaymentTest : ITest
 
 
             // Permettiamo di inserire il tipo di discount
-            int inputDiscount = Input.Read<int>(
+            int inputDiscountTye = Input.Read<int>(
                 "Insert Type of Discount\n" +
                 "1. Discount Percentile\n" +
                 "2. Discount Minus\n" +
                 "any. No Discount for this purchase\n"
             );
 
+
+
             // Prendo il discount class dal factory
-            IDiscountPolicy discountPolicy = FactoryDiscount.Create(inputDiscount);
+            IDiscountPolicy discountPolicy = FactoryDiscount.Create(inputDiscountTye);
 
             // Prendo il metodo di pagamento
             TypePayment paymentMethod = this.AskForPaymentMethod();
@@ -234,10 +245,16 @@ public class PaymentTest : ITest
             // Inserisco il metodo di pagamento
             Payment pMethod = new Payment(paymentMethod);
 
+            int? discount = null;
+            if (discountPolicy != null)
+            {
+                discount = Input.Read<int>("Insert discount");
+
+            }
             // instanzio il servizio
             PaymentService paymentService = new PaymentService(pMethod, discountPolicy);
 
-            paymentService.Execute(Str.Random(), amount);
+            paymentService.Execute(Str.Random(), amount, discount);
 
             return;
 
@@ -264,8 +281,6 @@ public class PaymentTest : ITest
         int input = Input.Read<int>("");
         if (input <= 0 || input > typePaymentenums.Length)
             throw new ExceptionLog("Payment Method now allowed", true);
-
-
 
         // prendiamo il metodo di pagamento selezionato
         return typePaymentenums[input - 1];
