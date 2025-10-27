@@ -175,3 +175,45 @@ VALUES
 ('Shadows of Time', 'Davide Serra', 'Fantasy', 2025, 16.65),
 ('The Hidden Realm', 'Sofia Esposito', 'Thriller', 2024, 14.85),
 ('Echoes of Destiny', 'Giorgio Fabbri', 'Romanzo', 2023, 13.10);
+
+
+# QUERY 
+-- auotori libri venduti con "king"
+USE world;
+SELECT l.titolo, l.autore, v.negozio, v.data_vendita 
+FROM vendite v
+JOIN libri l ON l.id = v.id_libro
+WHERE l.autore LIKE "%king%";
+
+-- libri non venduto nell'anno 2000 fino al 2002
+SELECT *
+FROM Libri l
+LEFT JOIN Vendite v ON l.id = v.id_libro
+WHERE v.id_libro IS NULL
+  AND l.anno_pubblicazione IS NOT NULL
+  AND l.anno_pubblicazione BETWEEN 2000 AND 2022
+  ORDER BY l.anno_pubblicazione desc
+  ;
+  
+-- punti vendita con libri venduto
+SELECT v.negozio, l.titolo, l.autore
+	FROM libri l
+	INNER JOIN vendite v ON v.id_libro = l.id
+	
+WHERE v.negozio IN('Amazon Online', 
+					'Feltrinelli Roma',
+					'Libraccio Firenze');
+ 
+ 
+ -- mostrare titoli, autore prezzo e data vendita dei libri 
+ -- con genere fantasi, horror, giallo
+ -- pubblicati dopo il 2015
+ -- venduto in engozi cui nome coniente Feltrinelli
+ SELECT l.titolo, l.autore, l.prezzo, v.data_vendita, v.negozio FROM libri l
+ inner JOIN vendite v ON l.id = v.id_libro
+ WHERE l.anno_pubblicazione > 2015
+ AND v.negozio LIKE "%Feltrinelli%"
+
+ ORDER BY v.data_vendita DESC 
+	
+ ;
