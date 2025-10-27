@@ -32,7 +32,7 @@ FROM
   information_schema.columns AS t2
 LIMIT 200;
 
--- aggiungi clienti senza ordine 
+-- aggiungi clienti CHE ANCORA DEVONO EFFETTUARE UN ORDINE
 INSERT INTO clienti (city_id, nome, cognome, email, eta) VALUES
 (NULL, 'Marco', 'Rossi', 'marco.rossi@example.com', 32),
 (1, 'Giulia', 'Bianchi', 'giulia.bianchi@example.com', 27),
@@ -112,7 +112,7 @@ o.data_ordine, c.nome
 FROM ordini o
 left JOIN clienti c ON o.id_cliente = c.id
 ORDER BY o.id_cliente;
-
+# EXTRA
 -- ordini con clienti e importo superiore a 200, join nazione e città
 SELECT 
 o.data_ordine, c.nome, o.importo, 
@@ -125,7 +125,7 @@ WHERE o.importo > 200
 ORDER BY o.importo
 ;
 
-
+# ESECRIZIO 2
 -- clienti senza ordine
 SELECT 
   c.id, c.nome, c.cognome, o.id_cliente
