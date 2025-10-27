@@ -59,6 +59,17 @@ o.data_ordine, c.nome
 FROM ordini o
 left JOIN clienti c ON o.id_cliente = c.id
 ORDER BY o.id_cliente;
+-- ordini con clienti e importo superiore a 200, join nazione e città
+
+SELECT 
+o.data_ordine, c.nome, o.importo, 
+cy.Name citta, naz.Name nazione
+FROM ordini o
+RIGHT JOIN clienti c ON o.id_cliente = c.id
+INNER JOIN city cy ON c.city_id = cy.ID
+INNER JOIN country naz ON cy.CountryCode = naz.Code
+WHERE o.importo > 200
+ORDER BY o.importo
 
 
 
